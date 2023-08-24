@@ -2,8 +2,20 @@
   "name": "@channels/source",
   "version": "0.0.0",
   "license": "MIT",
-  "scripts": {},
   "private": true,
+  "scripts": {
+    "ng": "nx",
+    "start": "nx serve",
+    "build": "nx run-many --target=build --all --parallel",
+    "test": "nx run-many --target=test --all --parallel",
+    "lint": "nx run-many --target=lint --all --parallel",
+    "e2e": "nx run-many --target=e2e --all",
+    "affected:build": "nx affected:build --configuration=production",
+    "affected:ci": "yarn affected:build && yarn affected:lint && yarn affected:test && yarn affected:e2e --configuration=ci-production",
+    "affected:e2e": "nx affected:e2e",
+    "affected:lint": "nx affected:lint --max-warnings=0",
+    "affected:test": "nx affected:test"
+  },
   "dependencies": {
     "@angular/animations": "~16.2.0",
     "@angular/common": "~16.2.0",

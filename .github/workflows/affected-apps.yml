@@ -47,7 +47,7 @@ jobs:
       - name: Build
         run: npx nx affected -t build --parallel=3 --configuration=ci
 
-      - name: Deploy
+      - name: Deploy App01
         if: contains(env.AFFECTED_APPS, 'app1')
         id: deployApp1
         uses: Azure/static-web-apps-deploy@v1
@@ -58,7 +58,7 @@ jobs:
           app_location: '/dist/apps/app1'
           output_location: ''
 
-      - name: Deploy
+      - name: Deploy App02
         if: contains(env.AFFECTED_APPS, 'app2')
         id: deployApp2
         uses: Azure/static-web-apps-deploy@v1

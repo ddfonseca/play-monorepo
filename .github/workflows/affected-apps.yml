@@ -26,9 +26,12 @@ jobs:
         id: appcheck
         run: |
             output=$(npx nx affected -t build)
-            echo output
+            echo $output
             modified_apps=($(echo "$output" | grep -oP '(?<=run )[^:]+'))
             echo "AFFECTED_APPS=${modified_apps}"
+            if [ -z "$modified_apps" ]; then
+              exit 0
+            fi
         env:
           AFFECTED_APPS: ''
 

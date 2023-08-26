@@ -24,7 +24,6 @@ jobs:
           fetch-depth: 0
       - uses: nrwl/nx-set-shas@v3
       - run: npm ci
-
       - run: npx nx affected -t lint --parallel=3
       - run: npx nx affected -t test --parallel=3 --configuration=ci
       - run: npx nx affected -t build --parallel=3
@@ -46,7 +45,6 @@ jobs:
           action: 'upload'
           ###### Repository/Build Configurations - These values can be configured to match your app requirements. ######
           # For more information regarding Static Web App workflow configurations, please visit: https://aka.ms/swaworkflowconfig
-          app_location: '/' # App source code path
-          app_build_command: 'npm run build:production app1'
-          output_location: '/dist/apps/app1' # Built app content directory - optional
+          app_location: '/apps/app1' # App source code path
+          output_location: '' # Built app content directory - optional
           ###### End of Repository/Build Configurations ######

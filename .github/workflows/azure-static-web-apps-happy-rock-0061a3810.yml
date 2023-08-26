@@ -7,9 +7,16 @@ on:
     paths:
       - apps/app2
       - .github/workflows/azure-static-web-apps-happy-rock-0061a3810.yml
-
+  pull_request:
+    types: [opened, synchronize, reopened, closed]
+    branches:
+      - main
+    paths:
+      - apps/app2
+      - .github/workflows/azure-static-web-apps-happy-rock-0061a3810.yml
 jobs:
   main:
+    if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed')
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code

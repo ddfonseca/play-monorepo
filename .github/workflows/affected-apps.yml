@@ -30,6 +30,7 @@ jobs:
             modified_apps=($(echo "$output" | grep -oP '(?<=run )[^:]+'))
             echo "AFFECTED_APPS=${modified_apps}"
             if [ -z "$modified_apps" ]; then
+              echo "Nenhum app afetado, finalizando..."
               exit 0
             fi
         env:

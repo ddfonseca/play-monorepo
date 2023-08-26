@@ -6,8 +6,12 @@ on:
       - main
 
 jobs:
-  install_dependencies:
+  main:
+    if: github.event_name == 'push'
     runs-on: ubuntu-latest
+    env:
+        AFFECTED_APPS: ''
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -21,91 +25,50 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-  lint:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-          submodules: true
-
-      - name: Set NX shas
-        uses: nrwl/nx-set-shas@v3
+      - name: Determine App to Deploy
+        id: appcheck
+        run: |
+            output=$(npx nx affected -t build)
+            echo $output
+            modified_apps=($(echo "$output" | grep -oP '(?<=run )[^:]+'))
+            echo "AFFECTED_APPS=${modified_apps}"
+            echo "AFFECTED_APPS=${modified_apps}" >> $GITHUB_ENV
+            if [ -z "$modified_apps" ]; then
+              echo "Nenhum app afetado, finalizando..."
+              exit 0
+            fi
+      - name: Print Affected Apps
+        run: |
+         echo "Affected Apps: ${{ env.AFFECTED_APPS }}"
 
       - name: Run linting
         run: npx nx affected -t lint --parallel=3
 
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-          submodules: true
-
-      - name: Set NX shas
-        uses: nrwl/nx-set-shas@v3
       - name: Run tests
         run: npx nx affected -t test --parallel=3 --configuration=ci
 
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-          submodules: true
-
-      - name: Set NX shas
-        uses: nrwl/nx-set-shas@v3
       - name: Build
         run: npx nx affected -t build --parallel=3 --configuration=ci
 
-  deploy_app1:
-    needs: build
-    runs-on: ubuntu-latest
-    if: contains(needs.build.outputs.AFFECTED_APPS, 'app1')
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-          submodules: true
-
-      - name: Set NX shas
-        uses: nrwl/nx-set-shas@v3
-      - name: Deploy App1
+      - name: Deploy App01
+        if: contains(env.AFFECTED_APPS, 'app1')
         id: deployApp1
         uses: Azure/static-web-apps-deploy@v1
         with:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_RED_GRASS_05828B01E }}
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          repo_token: ${{ secrets.GITHUB_TOKEN }} # Used for Github integrations (i.e. PR comments)
           action: 'upload'
           app_location: '/dist/apps/app1'
           output_location: ''
 
-  deploy_app2:
-    needs: build
-    runs-on: ubuntu-latest
-    if: contains(needs.build.outputs.AFFECTED_APPS, 'app2')
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-          submodules: true
-
-      - name: Set NX shas
-        uses: nrwl/nx-set-shas@v3
-      - name: Deploy App2
+      - name: Deploy App02
+        if: contains(env.AFFECTED_APPS, 'app2')
         id: deployApp2
         uses: Azure/static-web-apps-deploy@v1
         with:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_HAPPY_ROCK_0061A3810 }}
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          repo_token: ${{ secrets.GITHUB_TOKEN }} # Used for Github integrations (i.e. PR comments)
           action: 'upload'
           app_location: '/dist/apps/app2'
           output_location: ''
+

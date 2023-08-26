@@ -6,14 +6,14 @@ on:
       - main
     paths:
       - apps/app1
-      - .github/workflows/azure-static-web-apps-red-grass-05828b01e.yml
+      - .github/workflows/app01.yml
   pull_request:
     types: [opened, synchronize, reopened, closed]
     branches:
       - main
     paths:
       - apps/app1
-      - .github/workflows/azure-static-web-apps-red-grass-05828b01e.yml
+      - .github/workflows/app01.yml
 
 jobs:
   main:

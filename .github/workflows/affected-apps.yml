@@ -9,6 +9,9 @@ jobs:
   main:
     if: github.event_name == 'push'
     runs-on: ubuntu-latest
+    env:
+        AFFECTED_APPS: ''
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -29,12 +32,11 @@ jobs:
             echo $output
             modified_apps=($(echo "$output" | grep -oP '(?<=run )[^:]+'))
             echo "AFFECTED_APPS=${modified_apps}"
+            echo "AFFECTED_APPS=${modified_apps}" >> $GITHUB_ENV
             if [ -z "$modified_apps" ]; then
               echo "Nenhum app afetado, finalizando..."
               exit 0
             fi
-        env:
-          AFFECTED_APPS: ''
 
       - name: Run linting
         run: npx nx affected -t lint --parallel=3
@@ -46,7 +48,7 @@ jobs:
         run: npx nx affected -t build --parallel=3 --configuration=ci
 
       - name: Deploy
-        if: contains(steps.appcheck.outputs.AFFECTED_APPS, 'app1')
+        if: contains(env.AFFECTED_APPS, 'app1')
         id: deployApp1
         uses: Azure/static-web-apps-deploy@v1
         with:
@@ -57,7 +59,7 @@ jobs:
           output_location: ''
 
       - name: Deploy
-        if: contains(steps.appcheck.outputs.AFFECTED_APPS, 'app2')
+        if: contains(env.AFFECTED_APPS, 'app2')
         id: deployApp2
         uses: Azure/static-web-apps-deploy@v1
         with:

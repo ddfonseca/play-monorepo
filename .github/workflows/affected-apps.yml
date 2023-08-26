@@ -19,6 +19,9 @@ jobs:
       - name: Set NX shas
         uses: nrwl/nx-set-shas@v3
 
+      - name: Install dependencies
+        run: npm ci
+
       - name: Determine App to Deploy
         id: appcheck
         run: |
@@ -27,9 +30,6 @@ jobs:
             echo "AFFECTED_APPS=${modified_apps}"
         env:
           AFFECTED_APPS: ''
-
-      - name: Install dependencies
-        run: npm ci
 
       - name: Run linting
         run: npx nx affected -t lint --parallel=3

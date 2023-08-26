@@ -26,6 +26,7 @@ jobs:
         id: appcheck
         run: |
             output=$(npx nx affected -t build)
+            echo output
             modified_apps=($(echo "$output" | grep -oP '(?<=run )[^:]+'))
             echo "AFFECTED_APPS=${modified_apps}"
         env:
@@ -41,7 +42,7 @@ jobs:
         run: npx nx affected -t build --parallel=3 --configuration=ci
 
       - name: Deploy
-        if: contains(steps.appcheck.outputs.MODIFIED_APPS, 'app1')
+        if: contains(steps.appcheck.outputs.AFFECTED_APPS, 'app1')
         id: deployApp1
         uses: Azure/static-web-apps-deploy@v1
         with:
@@ -52,6 +53,7 @@ jobs:
           output_location: ''
 
       - name: Deploy
+        if: contains(steps.appcheck.outputs.AFFECTED_APPS, 'app2')
         id: deployApp2
         uses: Azure/static-web-apps-deploy@v1
         with:

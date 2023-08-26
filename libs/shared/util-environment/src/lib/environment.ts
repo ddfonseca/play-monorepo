@@ -5,7 +5,7 @@
 export const environment = {
   production: false,
   server: `https://ratemydoggo.azurewebsites.net/`,
-  teste: 'test1',
+  teste: 'test3',
 };
 
 /*

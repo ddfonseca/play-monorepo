@@ -29,9 +29,10 @@ jobs:
         id: appcheck
         run: |
             output=$(npx nx affected -t build)
-            echo $output
-            modified_apps=($(echo "$output" | grep -oP '(?<=run )[^:]+'))
-            echo "AFFECTED_APPS=${modified_apps}"
+            projects="(app1|app2)"
+            modified_apps=($(echo $output | grep -o -E "$projects" | sort | uniq))
+            IFS=','  # Definindo o separador interno como vírgula
+            printf -v modified_apps "%s" "${modified_apps[*]}"
             echo "AFFECTED_APPS=${modified_apps}" >> $GITHUB_ENV
             if [ -z "$modified_apps" ]; then
               echo "Nenhum app afetado, finalizando..."

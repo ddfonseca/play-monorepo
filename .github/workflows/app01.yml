@@ -5,14 +5,14 @@ on:
     branches:
       - main
     paths:
-      - apps/app1
+      - apps/app1/**
       - .github/workflows/app01.yml
   pull_request:
     types: [opened, synchronize, reopened, closed]
     branches:
       - main
     paths:
-      - apps/app1
+      - apps/app1/**
       - .github/workflows/app01.yml
 
 jobs:

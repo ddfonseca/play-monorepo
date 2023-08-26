@@ -6,12 +6,6 @@ on:
       - main
     paths:
       - apps/app1/**
-  pull_request:
-    types: [opened, synchronize, reopened, closed]
-    branches:
-      - main
-    paths:
-      - apps/app1/**
 
 jobs:
   main:

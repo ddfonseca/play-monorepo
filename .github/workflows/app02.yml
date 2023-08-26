@@ -6,12 +6,6 @@ on:
       - main
     paths:
       - apps/app2/**
-  pull_request:
-    types: [opened, synchronize, reopened, closed]
-    branches:
-      - main
-    paths:
-      - apps/app2/**
 jobs:
   main:
     if: github.event_name == 'push'

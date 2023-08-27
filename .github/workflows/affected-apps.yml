@@ -28,7 +28,7 @@ jobs:
       - name: Determine App to Deploy
         id: appcheck
         run: |
-            output=$(npx nx affected -t build)
+            output=$(npx nx show projects --affected)
             projects="(app1|app2)"
             modified_apps=($(echo $output | grep -o -E "$projects" | sort | uniq))
             IFS=','  # Definindo o separador interno como vírgula

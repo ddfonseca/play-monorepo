@@ -13,4 +13,7 @@ import { environment } from '@channels/shared/util-environment';
 })
 export class AppComponent {
   title = 'app1';
+  constructor() {
+    console.log(environment.server);
+  }
 }

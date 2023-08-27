@@ -27,28 +27,22 @@ jobs:
 
       - name: Determine App to Deploy
         id: appcheck
-        run: |
-            output=$(npx nx show projects --affected)
-            projects="(app1|app2)"
-            modified_apps=($(echo $output | grep -o -E "$projects" | sort | uniq))
-            IFS=','  # Definindo o separador interno como vírgula
-            printf -v modified_apps "%s" "${modified_apps[*]}"
-            echo "AFFECTED_APPS=${modified_apps}" >> $GITHUB_ENV
-            if [ -z "$modified_apps" ]; then
-              echo "Nenhum app afetado, finalizando..."
-              exit 0
-            fi
+        run: ./affected-apps.sh
+
       - name: Print Affected Apps
         run: |
          echo "Affected Apps: ${{ env.AFFECTED_APPS }}"
 
       - name: Run linting
+        if: success()
         run: npx nx affected -t lint --parallel=3
 
       - name: Run tests
+        if: success()
         run: npx nx affected -t test --parallel=3 --configuration=ci
 
       - name: Build
+        if: success()
         run: npx nx affected -t build --parallel=3 --configuration=ci
 
       - name: Deploy App01

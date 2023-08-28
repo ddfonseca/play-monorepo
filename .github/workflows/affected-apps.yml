@@ -44,6 +44,12 @@ jobs:
         if: success()
         run: npx nx affected -t build --parallel=3 --configuration=ci
 
+      - name: Upload affected-apps.txt
+        uses: actions/upload-artifact@v2
+        with:
+          name: affected-apps
+          path: ${{ github.workspace }}/affected-apps.txt
+
       - name: Upload dist folder
         uses: actions/upload-artifact@v3
         with:
@@ -56,12 +62,28 @@ jobs:
     runs-on: ubuntu-latest
     needs: lint_test_build
     steps:
+      - name: Download affected-apps.txt
+        uses: actions/download-artifact@v2
+        with:
+          name: affected-apps
+          path: affected-apps.txt
+
+      - name: Check affected apps
+        id: checkAffectedApps
+        run: |
+          if grep -q "app1" affected-apps.txt; then
+            echo "App1 is affected!"
+            echo "::set-output name=app1_affected::true"
+          else
+            echo "App1 is not affected."
+            echo "::set-output name=app1_affected::false"
+          fi
       - name: Download dist folder
         uses: actions/download-artifact@v3
         with:
           name: dist
       - name: Deploy App01
-        if: contains(env.AFFECTED_APPS, 'app1')
+        if: steps.checkAffectedApps.outputs.app1_affected == 'true'
         id: deployApp1
         uses: Azure/static-web-apps-deploy@v1
         with:
@@ -77,13 +99,30 @@ jobs:
     runs-on: ubuntu-latest
     needs: lint_test_build
     steps:
+      - name: Download affected-apps.txt
+        uses: actions/download-artifact@v2
+        with:
+          name: affected-apps
+          path: affected-apps.txt
+
+      - name: Check affected apps
+        id: checkAffectedApps
+        run: |
+          if grep -q "app2" affected-apps.txt; then
+            echo "App2 is affected!"
+            echo "::set-output name=app2_affected::true"
+          else
+            echo "App2 is not affected."
+            echo "::set-output name=app2_affected::false"
+          fi
+
       - name: Download dist folder
         uses: actions/download-artifact@v3
         with:
           name: dist
 
       - name: Deploy App02
-        if: contains(env.AFFECTED_APPS, 'app2')
+        if: steps.checkAffectedApps.outputs.app2_affected == 'true'
         id: deployApp2
         uses: Azure/static-web-apps-deploy@v1
         with:

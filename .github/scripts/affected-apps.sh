@@ -16,9 +16,9 @@ IFS=','
 printf -v modified_apps "%s" "${modified_apps[*]}" 
 
 # Adiciona modified_apps na variável de ambientes AFFECTED_APPS para ser usada nas etapas de deploy
-echo "AFFECTED_APPS=${modified_apps}" >> $GITHUB_ENV
-
+# echo "AFFECTED_APPS=${modified_apps}" >> $GITHUB_ENV
 if [ -z "$modified_apps" ]; then
     echo "Nenhum app modificado, finalizando..."
     exit 0
 fi
+echo "$modified_apps" > $GITHUB_WORKSPACE/affected-apps.txt

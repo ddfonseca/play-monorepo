@@ -63,15 +63,14 @@ jobs:
     needs: lint_test_build
     steps:
       - name: Download affected-apps.txt
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: affected-apps
-          path: affected-apps.txt
 
       - name: Check affected apps
         id: checkAffectedApps
         run: |
-          if grep -q "app1" affected-apps.txt; then
+          if grep -q "app1" affected-apps/affected-apps.txt; then
             echo "App1 is affected!"
             echo "::set-output name=app1_affected::true"
           else
@@ -100,15 +99,14 @@ jobs:
     needs: lint_test_build
     steps:
       - name: Download affected-apps.txt
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: affected-apps
-          path: affected-apps.txt
 
       - name: Check affected apps
         id: checkAffectedApps
         run: |
-          if grep -q "app2" affected-apps.txt; then
+          if grep -q "app2" affected-apps/affected-apps.txt; then
             echo "App2 is affected!"
             echo "::set-output name=app2_affected::true"
           else

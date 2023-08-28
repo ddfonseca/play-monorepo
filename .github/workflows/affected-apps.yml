@@ -72,12 +72,12 @@ jobs:
       - name: Check affected apps
         id: checkAffectedApps
         run: |
-          if grep -q "app1" affected-apps/affected-apps.txt; then
+          if grep -q "app1" affected-apps.txt; then
             echo "App1 is affected!"
-            echo "::set-output name=app1_affected::true"
+            echo app1_affected=true >> $GITHUB_OUTPUT
           else
             echo "App1 is not affected."
-            echo "::set-output name=app1_affected::false"
+            echo app1_affected=false >> $GITHUB_OUTPUT
           fi
       - name: Download dist folder
         uses: actions/download-artifact@v3
@@ -108,12 +108,12 @@ jobs:
       - name: Check affected apps
         id: checkAffectedApps
         run: |
-          if grep -q "app2" affected-apps/affected-apps.txt; then
+          if grep -q "app2" affected-apps.txt; then
             echo "App2 is affected!"
-            echo "::set-output name=app2_affected::true"
+            echo app2_affected=true >> $GITHUB_OUTPUT
           else
             echo "App2 is not affected."
-            echo "::set-output name=app2_affected::false"
+            echo app2_affected=false >> $GITHUB_OUTPUT
           fi
 
       - name: Download dist folder

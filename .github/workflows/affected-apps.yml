@@ -27,7 +27,7 @@ jobs:
 
       - name: Determine App to Deploy
         id: appcheck
-        run: ./affected-apps.sh
+        run: ./.github/scripts/affected-apps.sh
 
       - name: Print Affected Apps
         run: |

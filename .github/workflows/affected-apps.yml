@@ -28,9 +28,11 @@ jobs:
         id: appcheck
         run: ./.github/scripts/affected-apps.sh
 
-      - name: Print Affected Apps
-        run: |
-         echo "Affected Apps: ${{ env.AFFECTED_APPS }}"
+      - name: List Workspace Contents
+        run: ls -R ${{ github.workspace }}
+
+      - name: Debug Print Affected Apps File
+        run: cat $GITHUB_WORKSPACE/affected-apps.txt
 
       - name: Run linting
         if: success()
@@ -45,7 +47,7 @@ jobs:
         run: npx nx affected -t build --parallel=3 --configuration=ci
 
       - name: Upload affected-apps.txt
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: affected-apps
           path: ${{ github.workspace }}/affected-apps.txt

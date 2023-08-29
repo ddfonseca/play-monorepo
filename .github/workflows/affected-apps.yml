@@ -28,22 +28,16 @@ jobs:
         id: appcheck
         run: ./.github/scripts/affected-apps.sh
 
-      - name: List Workspace Contents
-        run: ls -R ${{ github.workspace }}
-
       - name: Debug Print Affected Apps File
         run: cat $GITHUB_WORKSPACE/affected-apps.txt
 
       - name: Run linting
-        if: success()
         run: npx nx affected -t lint --parallel=3
 
       - name: Run tests
-        if: success()
         run: npx nx affected -t test --parallel=3 --configuration=ci
 
       - name: Build
-        if: success()
         run: npx nx affected -t build --parallel=3 --configuration=ci
 
       - name: Upload affected-apps.txt

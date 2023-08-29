@@ -19,6 +19,6 @@ printf -v modified_apps "%s" "${modified_apps[*]}"
 # echo "AFFECTED_APPS=${modified_apps}" >> $GITHUB_ENV
 if [ -z "$modified_apps" ]; then
     echo "Nenhum app modificado, finalizando..."
-    exit 0
+    exit 1
 fi
 echo "$modified_apps" > $GITHUB_WORKSPACE/affected-apps.txt

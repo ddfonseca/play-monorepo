@@ -79,10 +79,6 @@ jobs:
           name: dist
           path: dist
 
-
-      - name: List Workspace Contents
-        run: ls -R ${{ github.workspace }}
-
       - name: Deploy App01
         if: steps.checkAffectedApps.outputs.app1_affected == 'true'
         id: deployApp1
